@@ -12,6 +12,8 @@ public class GameBoard : MonoBehaviour
 
     private Player _currentPlayer;
 
+    private enum BoardConditon { }
+
     [SerializeField] private GameObject _nought;
     [SerializeField] private GameObject _cross;
 
@@ -60,6 +62,7 @@ public class GameBoard : MonoBehaviour
         {
             Debug.Log("X: " + Math.Round(mousePosition.x).ToString() + " Y: " + Math.Round(mousePosition.y).ToString());
             Debug.Log(SquareClicked(player, mousePosition).name);
+            Debug.Log("Winner:" + EvaluteBoardCondition());
         }
     }
 
@@ -73,6 +76,53 @@ public class GameBoard : MonoBehaviour
         {
             _currentPlayer = _playerOne;
         }
+    }
+
+    private int EvaluteBoardCondition()
+    {
+        int boardCondition = 0;
+
+        if (_grid[0, 0] != 0 && _grid[0, 0] == _grid[1, 0] && _grid[1, 0] == _grid[2, 0])
+        {
+            boardCondition = _grid[0, 0];
+        }
+
+        if (_grid[0, 1] != 0 && _grid[0, 1] == _grid[1, 1] && _grid[1, 1] == _grid[2, 1])
+        {
+            boardCondition = _grid[0, 1];
+        }
+
+        if (_grid[0, 2] != 0 && _grid[0, 2] == _grid[1, 2] && _grid[1, 2] == _grid[2, 2])
+        {
+            boardCondition = _grid[0, 2];
+        }
+
+        if (_grid[0, 0] != 0 && _grid[0, 0] == _grid[0, 1] && _grid[0, 1] == _grid[0, 2])
+        {
+            boardCondition = _grid[0, 0];
+        }
+
+        if (_grid[1, 0] != 0 && _grid[1, 0] == _grid[1, 1] && _grid[1, 1] == _grid[1, 2])
+        {
+            boardCondition = _grid[1, 0];
+        }
+
+        if (_grid[2, 0] != 0 && _grid[2, 0] == _grid[2, 1] && _grid[2, 1] == _grid[2, 2])
+        {
+            boardCondition = _grid[2, 0];
+        }
+
+        if (_grid[0, 0] != 0 && _grid[0, 0] == _grid[1, 1] && _grid[1, 1] == _grid[2, 2])
+        {
+            boardCondition = _grid[0, 0];
+        }
+
+        if (_grid[0, 2] != 0 && _grid[0, 2] == _grid[1, 1] && _grid[1, 1] == _grid[2, 0])
+        {
+            boardCondition = _grid[0, 0];
+        }
+
+        return boardCondition;
     }
 
     private GameObject SquareClicked(Player player, Vector2 mousePosition)
