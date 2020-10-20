@@ -16,4 +16,19 @@ public class Player : MonoBehaviour
             _gamePiece = value;
         }
     }
+
+    [SerializeField] private int _gamePieceValue;
+
+    public int GamePieceValue
+    {
+        get
+        {
+            return _gamePieceValue;
+        }
+
+        set
+        {
+            _gamePieceValue = value;
+        }
+    }
 }
