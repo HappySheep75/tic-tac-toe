@@ -7,6 +7,11 @@ public class GameBoard : MonoBehaviour
 
     private int[,] _grid;
 
+    private Player _playerOne;
+    private Player _playerTwo;
+
+    private int _playerTurn;
+
     [SerializeField] private GameObject _nought;
     [SerializeField] private GameObject _cross;
 
@@ -15,24 +20,40 @@ public class GameBoard : MonoBehaviour
     {
         _grid = new int[3, 3];
         _boxCollider2D = GetComponent<BoxCollider2D>();
+
+        _playerOne = GameObject.Find("PlayerOne").GetComponent<Player>();
+        _playerTwo = GameObject.Find("PlayerTwo").GetComponent<Player>();
+
+        _playerTurn = 1;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && _playerTurn == 1)
         {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            if (_boxCollider2D.OverlapPoint(mousePosition))
-            {
-                Debug.Log("X: " + Math.Round(mousePosition.x).ToString() + " Y: " + Math.Round(mousePosition.y).ToString());
-                Debug.Log(SquareClicked(mousePosition).name);
-            }
+            PlayerMove(_playerOne);
+            _playerTurn = 2;
+        }
+        else if (Input.GetMouseButtonUp(0) && _playerTurn == 2)
+        {
+            PlayerMove(_playerTwo);
+            _playerTurn = 1;
         }
     }
 
-    private GameObject SquareClicked(Vector2 mousePosition)
+    private void PlayerMove(Player player)
+    {
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (_boxCollider2D.OverlapPoint(mousePosition))
+        {
+            Debug.Log("X: " + Math.Round(mousePosition.x).ToString() + " Y: " + Math.Round(mousePosition.y).ToString());
+            Debug.Log(SquareClicked(player, mousePosition).name);
+        }
+    }
+
+    private GameObject SquareClicked(Player player, Vector2 mousePosition)
     {
         var anchor = new GameObject();
 
@@ -41,7 +62,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorTopLeft");
 
-            Instantiate(_nought, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // TopMiddle square clicked
@@ -49,7 +70,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorTopMiddle");
 
-            Instantiate(_cross, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // TopRight square clicked
@@ -57,7 +78,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorTopRight");
 
-            Instantiate(_nought, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // MiddleLeft square clicked
@@ -65,7 +86,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorMiddleLeft");
 
-            Instantiate(_cross, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // Middle square clicked
@@ -73,7 +94,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorMiddle");
 
-            Instantiate(_nought, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // MiddleRight square clicked
@@ -81,7 +102,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorMiddleRight");
 
-            Instantiate(_cross, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // BottomRight square clicked
@@ -89,7 +110,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorBottomLeft");
 
-            Instantiate(_nought, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // BottomMiddle square clicked
@@ -97,7 +118,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorBottomMiddle");
 
-            Instantiate(_cross, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         // BottomRight square clicked
@@ -105,7 +126,7 @@ public class GameBoard : MonoBehaviour
         {
             anchor = GameObject.Find("AnchorBottomRight");
 
-            Instantiate(_nought, anchor.transform.position, anchor.transform.rotation);
+            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
         }
 
         return anchor;
