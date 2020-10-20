@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameBoard : MonoBehaviour
@@ -12,7 +13,7 @@ public class GameBoard : MonoBehaviour
 
     private Player _currentPlayer;
 
-    private enum BoardConditon { }
+    private List<GameObject> _boardPieces;
 
     [SerializeField] private GameObject _nought;
     [SerializeField] private GameObject _cross;
@@ -22,6 +23,8 @@ public class GameBoard : MonoBehaviour
     {
         _grid = new int[3, 3];
         _boxCollider2D = GetComponent<BoxCollider2D>();
+
+        _boardPieces = new List<GameObject>();
 
         SetupGrid();
 
@@ -54,6 +57,16 @@ public class GameBoard : MonoBehaviour
         }
     }
 
+    private void ClearBoard()
+    {
+        for (int i = 0; i < _boardPieces.Count; i++)
+        {
+            Destroy(_boardPieces[i]);
+        }
+
+        _boardPieces.Clear();
+    }
+
     private void PlayerMove(Player player)
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -62,8 +75,19 @@ public class GameBoard : MonoBehaviour
         {
             Debug.Log("X: " + Math.Round(mousePosition.x).ToString() + " Y: " + Math.Round(mousePosition.y).ToString());
             Debug.Log(SquareClicked(player, mousePosition).name);
-            Debug.Log("Winner:" + EvaluteBoardCondition());
+            Debug.Log("Winner:" + EvaluateBoardCondition());
+
+            if (EvaluateBoardCondition() > 0)
+            {
+                ResetBoard();
+            }
         }
+    }
+
+    private void ResetBoard()
+    {
+        ClearBoard();
+        SetupGrid();
     }
 
     private void UpdateCurrentPlayer()
@@ -78,7 +102,7 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    private int EvaluteBoardCondition()
+    private int EvaluateBoardCondition()
     {
         int boardCondition = 0;
 
@@ -122,6 +146,11 @@ public class GameBoard : MonoBehaviour
             boardCondition = _grid[0, 0];
         }
 
+        if (boardCondition == 0 && _boardPieces.Count >= 9)
+        {
+            boardCondition = 3;
+        }
+
         return boardCondition;
     }
 
@@ -135,7 +164,10 @@ public class GameBoard : MonoBehaviour
             _grid[0, 0] = player.GamePieceValue;
 
             anchor = GameObject.Find("AnchorTopLeft");
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -147,7 +179,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorTopMiddle");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -159,7 +193,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorTopRight");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -171,7 +207,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorMiddleLeft");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -183,7 +221,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorMiddle");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -195,7 +235,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorMiddleRight");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -207,7 +249,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorBottomLeft");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -219,7 +263,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorBottomMiddle");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }
@@ -231,7 +277,9 @@ public class GameBoard : MonoBehaviour
 
             anchor = GameObject.Find("AnchorBottomRight");
 
-            Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+            var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _boardPieces.Add(boardPieace);
 
             UpdateCurrentPlayer();
         }

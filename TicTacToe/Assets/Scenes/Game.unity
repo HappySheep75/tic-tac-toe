@@ -221,6 +221,10 @@ PrefabInstance:
       propertyPath: _gamePiece
       value: 
       objectReference: {fileID: 3076194151997175084, guid: 9b6c80672f41f1047bcd86877d26046a, type: 3}
+    - target: {fileID: 2201084606645489887, guid: b565130ff60dd5a4982ee920365f087c, type: 3}
+      propertyPath: _gamePieceValue
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7659989992392960214, guid: b565130ff60dd5a4982ee920365f087c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7
@@ -282,6 +286,10 @@ PrefabInstance:
       propertyPath: _gamePiece
       value: 
       objectReference: {fileID: 8096875330639933322, guid: 13de3f93b9cec7c489baa80d3cbcac8f, type: 3}
+    - target: {fileID: 2201084606645489887, guid: b565130ff60dd5a4982ee920365f087c, type: 3}
+      propertyPath: _gamePieceValue
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7659989992392960214, guid: b565130ff60dd5a4982ee920365f087c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7
