@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameBoard : MonoBehaviour
 {
@@ -14,6 +15,11 @@ public class GameBoard : MonoBehaviour
     private Player _currentPlayer;
 
     private List<GameObject> _boardPieces;
+
+    private bool _waitForStart;
+    private bool _countDown;
+
+    private float _count = 5;
 
     [SerializeField] private GameObject _nought;
     [SerializeField] private GameObject _cross;
@@ -32,14 +38,66 @@ public class GameBoard : MonoBehaviour
         _playerTwo = GameObject.Find("PlayerTwo").GetComponent<Player>();
 
         _currentPlayer = _playerOne;
+
+        _waitForStart = true;
+
+        _count += 1;
+
+        NewGame();
+    }
+
+    private void NewGame()
+    {
+        GameObject.Find("UIGameBoard").transform.Find("InfoText").GetComponent<Text>().text = "Press\r\nany\r\nkey...";
+
+        GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Waiting...";
+        GameObject.Find("UIPlayerOne").transform.Find("PlayerOneTimerText").GetComponent<Text>().text = "20:00 s";
+
+        GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Waiting...";
+        GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoTimerText").GetComponent<Text>().text = "20:00 s";
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (_waitForStart)
+        {
+            if (Input.anyKey)
+            {
+                _countDown = true;
+                _waitForStart = false;
+
+                GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Get ready...";
+                GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Wait...";
+            }
+
+            return;
+        }
+
+        if (_countDown)
+        {
+            CountDown();
+
+            return;
+        }
+
         if (Input.GetMouseButtonUp(0))
         {
             PlayerMove(_currentPlayer);
+        }
+    }
+
+    private void CountDown()
+    {
+        GameObject.Find("UIGameBoard").transform.Find("InfoText").GetComponent<Text>().text = Mathf.FloorToInt(_count % 60).ToString();
+        _count -= Time.deltaTime;
+
+        if (_count < 1)
+        {
+            GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Your turn!";
+            GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Wait...";
+            GameObject.Find("UIGameBoard").transform.Find("InfoText").GetComponent<Text>().text = "";
+            _countDown = false;
         }
     }
 
@@ -95,10 +153,16 @@ public class GameBoard : MonoBehaviour
         if (_currentPlayer == _playerOne)
         {
             _currentPlayer = _playerTwo;
+
+            GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Wait...";
+            GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Your turn!";
         }
         else if (_currentPlayer == _playerTwo)
         {
             _currentPlayer = _playerOne;
+
+            GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Your turn!";
+            GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Wait...";
         }
     }
 
@@ -149,6 +213,24 @@ public class GameBoard : MonoBehaviour
         if (boardCondition == 0 && _boardPieces.Count >= 9)
         {
             boardCondition = 3;
+        }
+
+        if (boardCondition == 1)
+        {
+            GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Winner!";
+            GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "You loose!";
+        }
+
+        if (boardCondition == 2)
+        {
+            GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "You loose!";
+            GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Winner!";
+        }
+
+        if (boardCondition == 3)
+        {
+            GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Draw!";
+            GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Draw!";
         }
 
         return boardCondition;
