@@ -7,7 +7,7 @@ public class GameBoard : MonoBehaviour
 {
     private BoxCollider2D _boxCollider2D;
 
-    private int[,] _grid;
+    private GameObject[,] _grid;
 
     private Player _playerOne;
     private Player _playerTwo;
@@ -27,7 +27,7 @@ public class GameBoard : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _grid = new int[3, 3];
+        _grid = new GameObject[3, 3];
         _boxCollider2D = GetComponent<BoxCollider2D>();
 
         _boardPieces = new List<GameObject>();
@@ -110,7 +110,7 @@ public class GameBoard : MonoBehaviour
         {
             for (int y = 0; y < gridSizeY; y++)
             {
-                _grid[x, y] = 0;
+                _grid[x, y] = null;
             }
         }
     }
@@ -129,15 +129,15 @@ public class GameBoard : MonoBehaviour
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (_boxCollider2D.OverlapPoint(mousePosition))
+        if (EvaluateBoardCondition() == 0 && _boxCollider2D.OverlapPoint(mousePosition))
         {
             Debug.Log("X: " + Math.Round(mousePosition.x).ToString() + " Y: " + Math.Round(mousePosition.y).ToString());
-            Debug.Log(SquareClicked(player, mousePosition).name);
+            Debug.Log(SquareClicked(player, mousePosition)?.name);
             Debug.Log("Winner:" + EvaluateBoardCondition());
 
             if (EvaluateBoardCondition() > 0)
             {
-                ResetBoard();
+                //ResetBoard();
             }
         }
     }
@@ -170,44 +170,92 @@ public class GameBoard : MonoBehaviour
     {
         int boardCondition = 0;
 
-        if (_grid[0, 0] != 0 && _grid[0, 0] == _grid[1, 0] && _grid[1, 0] == _grid[2, 0])
+        if (_grid[0, 0] != null && _grid[1, 0] != null && _grid[2, 0] != null &&
+            _grid[0, 0].GetComponent<GamePiece>().Value == _grid[1, 0].GetComponent<GamePiece>().Value &&
+            _grid[1, 0].GetComponent<GamePiece>().Value == _grid[2, 0].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[0, 0];
+            boardCondition = _grid[0, 0].GetComponent<GamePiece>().Value;
+
+            _grid[0, 0].GetComponent<SpriteRenderer>().sprite = _grid[0, 0].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 0].GetComponent<SpriteRenderer>().sprite = _grid[1, 0].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 0].GetComponent<SpriteRenderer>().sprite = _grid[2, 0].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[0, 1] != 0 && _grid[0, 1] == _grid[1, 1] && _grid[1, 1] == _grid[2, 1])
+        if (_grid[0, 1] != null && _grid[1, 1] != null && _grid[2, 1] != null &&
+            _grid[0, 1].GetComponent<GamePiece>().Value == _grid[1, 1].GetComponent<GamePiece>().Value &&
+            _grid[1, 1].GetComponent<GamePiece>().Value == _grid[2, 1].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[0, 1];
+            boardCondition = _grid[0, 1].GetComponent<GamePiece>().Value;
+
+            _grid[0, 1].GetComponent<SpriteRenderer>().sprite = _grid[0, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 1].GetComponent<SpriteRenderer>().sprite = _grid[1, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 1].GetComponent<SpriteRenderer>().sprite = _grid[2, 1].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[0, 2] != 0 && _grid[0, 2] == _grid[1, 2] && _grid[1, 2] == _grid[2, 2])
+        if (_grid[0, 2] != null && _grid[1, 2] != null && _grid[2, 2] != null &&
+            _grid[0, 2].GetComponent<GamePiece>().Value == _grid[1, 2].GetComponent<GamePiece>().Value &&
+            _grid[1, 2].GetComponent<GamePiece>().Value == _grid[2, 2].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[0, 2];
+            boardCondition = _grid[0, 2].GetComponent<GamePiece>().Value;
+
+            _grid[0, 2].GetComponent<SpriteRenderer>().sprite = _grid[0, 2].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 2].GetComponent<SpriteRenderer>().sprite = _grid[1, 2].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 2].GetComponent<SpriteRenderer>().sprite = _grid[2, 2].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[0, 0] != 0 && _grid[0, 0] == _grid[0, 1] && _grid[0, 1] == _grid[0, 2])
+        if (_grid[0, 0] != null && _grid[0, 1] != null && _grid[0, 2] != null &&
+            _grid[0, 0].GetComponent<GamePiece>().Value == _grid[0, 1].GetComponent<GamePiece>().Value &&
+            _grid[0, 1].GetComponent<GamePiece>().Value == _grid[0, 2].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[0, 0];
+            boardCondition = _grid[0, 0].GetComponent<GamePiece>().Value;
+
+            _grid[0, 0].GetComponent<SpriteRenderer>().sprite = _grid[0, 0].GetComponent<GamePiece>().WinnerSprite;
+            _grid[0, 1].GetComponent<SpriteRenderer>().sprite = _grid[0, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[0, 2].GetComponent<SpriteRenderer>().sprite = _grid[0, 2].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[1, 0] != 0 && _grid[1, 0] == _grid[1, 1] && _grid[1, 1] == _grid[1, 2])
+        if (_grid[1, 0] != null && _grid[1, 1] != null && _grid[1, 2] != null &&
+            _grid[1, 0].GetComponent<GamePiece>().Value == _grid[1, 1].GetComponent<GamePiece>().Value &&
+            _grid[1, 1].GetComponent<GamePiece>().Value == _grid[1, 2].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[1, 0];
+            boardCondition = _grid[1, 0].GetComponent<GamePiece>().Value;
+
+            _grid[1, 0].GetComponent<SpriteRenderer>().sprite = _grid[1, 0].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 1].GetComponent<SpriteRenderer>().sprite = _grid[1, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 2].GetComponent<SpriteRenderer>().sprite = _grid[1, 2].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[2, 0] != 0 && _grid[2, 0] == _grid[2, 1] && _grid[2, 1] == _grid[2, 2])
+        if (_grid[2, 0] != null && _grid[2, 1] != null && _grid[2, 1] != null &&
+            _grid[2, 0].GetComponent<GamePiece>().Value == _grid[2, 1].GetComponent<GamePiece>().Value &&
+            _grid[2, 1].GetComponent<GamePiece>().Value == _grid[2, 2].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[2, 0];
+            boardCondition = _grid[2, 0].GetComponent<GamePiece>().Value;
+
+            _grid[2, 0].GetComponent<SpriteRenderer>().sprite = _grid[2, 0].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 1].GetComponent<SpriteRenderer>().sprite = _grid[2, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 2].GetComponent<SpriteRenderer>().sprite = _grid[2, 2].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[0, 0] != 0 && _grid[0, 0] == _grid[1, 1] && _grid[1, 1] == _grid[2, 2])
+        if (_grid[0, 0] != null && _grid[1, 1] != null && _grid[2, 2] != null &&
+            _grid[0, 0].GetComponent<GamePiece>().Value == _grid[1, 1].GetComponent<GamePiece>().Value &&
+            _grid[1, 1].GetComponent<GamePiece>().Value == _grid[2, 2].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[0, 0];
+            boardCondition = _grid[0, 0].GetComponent<GamePiece>().Value;
+
+            _grid[0, 0].GetComponent<SpriteRenderer>().sprite = _grid[0, 0].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 1].GetComponent<SpriteRenderer>().sprite = _grid[1, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 2].GetComponent<SpriteRenderer>().sprite = _grid[2, 2].GetComponent<GamePiece>().WinnerSprite;
         }
 
-        if (_grid[0, 2] != 0 && _grid[0, 2] == _grid[1, 1] && _grid[1, 1] == _grid[2, 0])
+        if (_grid[0, 2] != null && _grid[1, 1] != null && _grid[2, 0] != null &&
+            _grid[0, 2].GetComponent<GamePiece>().Value == _grid[1, 1].GetComponent<GamePiece>().Value &&
+            _grid[1, 1].GetComponent<GamePiece>().Value == _grid[2, 0].GetComponent<GamePiece>().Value)
         {
-            boardCondition = _grid[0, 0];
+            boardCondition = _grid[0, 0].GetComponent<GamePiece>().Value;
+
+            _grid[0, 2].GetComponent<SpriteRenderer>().sprite = _grid[0, 2].GetComponent<GamePiece>().WinnerSprite;
+            _grid[1, 1].GetComponent<SpriteRenderer>().sprite = _grid[1, 1].GetComponent<GamePiece>().WinnerSprite;
+            _grid[2, 0].GetComponent<SpriteRenderer>().sprite = _grid[2, 0].GetComponent<GamePiece>().WinnerSprite;
         }
 
         if (boardCondition == 0 && _boardPieces.Count >= 9)
@@ -238,16 +286,16 @@ public class GameBoard : MonoBehaviour
 
     private GameObject SquareClicked(Player player, Vector2 mousePosition)
     {
-        var anchor = new GameObject();
+        GameObject anchor = null;
 
         // TopLeft square clicked
-        if (_grid[0, 0] == 0 && Math.Round(mousePosition.x) >= -4 && Math.Round(mousePosition.x) <= -2 && Math.Round(mousePosition.y) >= 2 && Math.Round(mousePosition.y) <= 4)
+        if (_grid[0, 0] == null && Math.Round(mousePosition.x) >= -4 && Math.Round(mousePosition.x) <= -2 && Math.Round(mousePosition.y) >= 2 && Math.Round(mousePosition.y) <= 4)
         {
-            _grid[0, 0] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorTopLeft");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[0, 0] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -255,13 +303,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // TopMiddle square clicked
-        if (_grid[1, 0] == 0 && Math.Round(mousePosition.x) >= -1 && Math.Round(mousePosition.x) <= 1 && Math.Round(mousePosition.y) >= 2 && Math.Round(mousePosition.y) <= 4)
+        if (_grid[1, 0] == null && Math.Round(mousePosition.x) >= -1 && Math.Round(mousePosition.x) <= 1 && Math.Round(mousePosition.y) >= 2 && Math.Round(mousePosition.y) <= 4)
         {
-            _grid[1, 0] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorTopMiddle");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[1, 0] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -269,13 +317,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // TopRight square clicked
-        if (_grid[2, 0] == 0 && Math.Round(mousePosition.x) >= 2 && Math.Round(mousePosition.x) <= 4 && Math.Round(mousePosition.y) >= 2 && Math.Round(mousePosition.y) <= 4)
+        if (_grid[2, 0] == null && Math.Round(mousePosition.x) >= 2 && Math.Round(mousePosition.x) <= 4 && Math.Round(mousePosition.y) >= 2 && Math.Round(mousePosition.y) <= 4)
         {
-            _grid[2, 0] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorTopRight");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[2, 0] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -283,13 +331,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // MiddleLeft square clicked
-        if (_grid[0, 1] == 0 && Math.Round(mousePosition.x) >= -4 && Math.Round(mousePosition.x) <= -2 && Math.Round(mousePosition.y) >= -1 && Math.Round(mousePosition.y) <= 1)
+        if (_grid[0, 1] == null && Math.Round(mousePosition.x) >= -4 && Math.Round(mousePosition.x) <= -2 && Math.Round(mousePosition.y) >= -1 && Math.Round(mousePosition.y) <= 1)
         {
-            _grid[0, 1] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorMiddleLeft");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[0, 1] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -297,13 +345,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // Middle square clicked
-        if (_grid[1, 1] == 0 && Math.Round(mousePosition.x) >= -1 && Math.Round(mousePosition.x) <= 1 && Math.Round(mousePosition.y) >= -1 && Math.Round(mousePosition.y) <= 1)
+        if (_grid[1, 1] == null && Math.Round(mousePosition.x) >= -1 && Math.Round(mousePosition.x) <= 1 && Math.Round(mousePosition.y) >= -1 && Math.Round(mousePosition.y) <= 1)
         {
-            _grid[1, 1] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorMiddle");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[1, 1] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -311,13 +359,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // MiddleRight square clicked
-        if (_grid[2, 1] == 0 && Math.Round(mousePosition.x) >= 2 && Math.Round(mousePosition.x) <= 4 && Math.Round(mousePosition.y) >= -1 && Math.Round(mousePosition.y) <= 1)
+        if (_grid[2, 1] == null && Math.Round(mousePosition.x) >= 2 && Math.Round(mousePosition.x) <= 4 && Math.Round(mousePosition.y) >= -1 && Math.Round(mousePosition.y) <= 1)
         {
-            _grid[2, 1] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorMiddleRight");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[2, 1] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -325,13 +373,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // BottomLeft square clicked
-        if (_grid[0, 2] == 0 && Math.Round(mousePosition.x) >= -4 && Math.Round(mousePosition.x) <= -2 && Math.Round(mousePosition.y) >= -4 && Math.Round(mousePosition.y) <= -2)
+        if (_grid[0, 2] == null && Math.Round(mousePosition.x) >= -4 && Math.Round(mousePosition.x) <= -2 && Math.Round(mousePosition.y) >= -4 && Math.Round(mousePosition.y) <= -2)
         {
-            _grid[0, 2] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorBottomLeft");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[0, 2] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -339,13 +387,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // BottomMiddle square clicked
-        if (_grid[1, 2] == 0 && Math.Round(mousePosition.x) >= -1 && Math.Round(mousePosition.x) <= 1 && Math.Round(mousePosition.y) >= -4 && Math.Round(mousePosition.y) <= -2)
+        if (_grid[1, 2] == null && Math.Round(mousePosition.x) >= -1 && Math.Round(mousePosition.x) <= 1 && Math.Round(mousePosition.y) >= -4 && Math.Round(mousePosition.y) <= -2)
         {
-            _grid[1, 2] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorBottomMiddle");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[1, 2] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 
@@ -353,13 +401,13 @@ public class GameBoard : MonoBehaviour
         }
 
         // BottomRight square clicked
-        if (_grid[2, 2] == 0 && Math.Round(mousePosition.x) >= 2 && Math.Round(mousePosition.x) <= 4 && Math.Round(mousePosition.y) >= -4 && Math.Round(mousePosition.y) <= -2)
+        if (_grid[2, 2] == null && Math.Round(mousePosition.x) >= 2 && Math.Round(mousePosition.x) <= 4 && Math.Round(mousePosition.y) >= -4 && Math.Round(mousePosition.y) <= -2)
         {
-            _grid[2, 2] = player.GamePieceValue;
-
             anchor = GameObject.Find("AnchorBottomRight");
 
             var boardPieace = Instantiate(player.GamePiece, anchor.transform.position, anchor.transform.rotation);
+
+            _grid[2, 2] = boardPieace;
 
             _boardPieces.Add(boardPieace);
 

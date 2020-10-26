@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7598101147877703459}
   - component: {fileID: 7102865091004579521}
+  - component: {fileID: -3610095673464303458}
   m_Layer: 0
-  m_Name: cross
+  m_Name: Cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,3 +83,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-3610095673464303458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3076194151997175084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6e0caf94f612741a26d28f5510a2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _value: 1
+  _winnerSprite: {fileID: 21300000, guid: b9dc3f1e17659174c8563741ca83a407, type: 3}
