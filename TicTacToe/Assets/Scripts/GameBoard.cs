@@ -18,6 +18,7 @@ public class GameBoard : MonoBehaviour
 
     private bool _waitForStart;
     private bool _countDown;
+    private bool _gameInProgress;
 
     private float _count = 5;
 
@@ -40,6 +41,7 @@ public class GameBoard : MonoBehaviour
         _currentPlayer = _playerOne;
 
         _waitForStart = true;
+        _gameInProgress = true;
 
         _count += 1;
 
@@ -51,10 +53,10 @@ public class GameBoard : MonoBehaviour
         GameObject.Find("UIGameBoard").transform.Find("InfoText").GetComponent<Text>().text = "Press\r\nany\r\nkey...";
 
         GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Waiting...";
-        GameObject.Find("UIPlayerOne").transform.Find("PlayerOneTimerText").GetComponent<Text>().text = "20:00 s";
+        GameObject.Find("UIPlayerOne").transform.Find("PlayerOneTimerText").GetComponent<Text>().text = GetElapsedTime(_playerOne);
 
         GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Waiting...";
-        GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoTimerText").GetComponent<Text>().text = "20:00 s";
+        GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoTimerText").GetComponent<Text>().text = GetElapsedTime(_playerTwo);
     }
 
     // Update is called once per frame
@@ -81,10 +83,32 @@ public class GameBoard : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (_gameInProgress)
+        {
+            _currentPlayer.IsYourTurn = true;
+            UpdateTimer();
+            EvaluateBoardCondition();
+        }
+
+        if (_gameInProgress && Input.GetMouseButtonUp(0))
         {
             PlayerMove(_currentPlayer);
         }
+    }
+
+    private void UpdateTimer()
+    {
+        GameObject.Find("UIPlayerOne").transform.Find("PlayerOneTimerText").GetComponent<Text>().text = GetElapsedTime(_playerOne);
+        GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoTimerText").GetComponent<Text>().text = GetElapsedTime(_playerTwo);
+    }
+
+    private string GetElapsedTime(Player player)
+    {
+        int playerMinutes = Mathf.FloorToInt(player.GameTime / 60);
+        int playerSeconds = Mathf.FloorToInt(player.GameTime % 60);
+        string playTime = new TimeSpan(0, playerMinutes, playerSeconds).ToString(@"mm\:ss");
+
+        return playTime;
     }
 
     private void CountDown()
@@ -156,6 +180,9 @@ public class GameBoard : MonoBehaviour
 
             GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Wait...";
             GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Your turn!";
+
+            _playerOne.IsYourTurn = false;
+            _playerTwo.IsYourTurn = true;
         }
         else if (_currentPlayer == _playerTwo)
         {
@@ -163,6 +190,9 @@ public class GameBoard : MonoBehaviour
 
             GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Your turn!";
             GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Wait...";
+
+            _playerOne.IsYourTurn = true;
+            _playerTwo.IsYourTurn = false;
         }
     }
 
@@ -263,22 +293,31 @@ public class GameBoard : MonoBehaviour
             boardCondition = 3;
         }
 
-        if (boardCondition == 1)
+        if (boardCondition == 1 || _playerTwo.GameTime <= 1f)
         {
             GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Winner!";
             GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "You loose!";
+            _playerOne.IsYourTurn = false;
+            _playerTwo.IsYourTurn = false;
+            _gameInProgress = false;
         }
 
-        if (boardCondition == 2)
+        if (boardCondition == 2 || _playerOne.GameTime <= 1f)
         {
             GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "You loose!";
             GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Winner!";
+            _playerOne.IsYourTurn = false;
+            _playerTwo.IsYourTurn = false;
+            _gameInProgress = false;
         }
 
         if (boardCondition == 3)
         {
             GameObject.Find("UIPlayerOne").transform.Find("PlayerOneStatusText").GetComponent<Text>().text = "Draw!";
             GameObject.Find("UIPlayerTwo").transform.Find("PlayerTwoStatusText").GetComponent<Text>().text = "Draw!";
+            _playerOne.IsYourTurn = false;
+            _playerTwo.IsYourTurn = false;
+            _gameInProgress = false;
         }
 
         return boardCondition;

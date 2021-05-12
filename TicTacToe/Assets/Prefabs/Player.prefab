@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gamePiece: {fileID: 0}
+  _gamePieceValue: 0
+  _gameTime: 20
+  _isYourTurn: 0
